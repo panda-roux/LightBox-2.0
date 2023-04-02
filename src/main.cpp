@@ -1,10 +1,19 @@
 #include <Arduino.h>
 #include "LEDsrtip_class.cpp"
+#include "Sensor_class.cpp"
 
 LEDStrip strip(6, 100); // instantiate a LEDStrip object connected to pin 6 with 100 LEDs
 
 void setup() {
   // put your setup code here, to run once:
+  for (size_t i = 0; i < 100; i++)
+  {
+    /* Resset */
+    strip.setLEDColor(i,0,0,0); // set all leds off
+
+  }
+  strip.run(); // update leds
+  
 }
 
 void loop() {
