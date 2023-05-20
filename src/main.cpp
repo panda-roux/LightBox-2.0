@@ -2,17 +2,24 @@
 #include "LEDsrtip_class.cpp"
 
 #include <Wire.h>
-#include "C:\Users\battl\Documents\PlatformIO\Projects\LightBox 2.0\lib\Sensor\MCP23016.h"
+#include "C:\Users\battl\Documents\PlatformIO\Projects\LightBox 2.0\lib\Sensor_REV_B\MCP23016.h"
 
 // instantiate a LEDStrip object connected to pin 6 with 100 LED
 // instantiate 7 Controller objects 
-
-
-#define MCP23016_ADDRESS 0x20
-
-MCP23016 mcp(MCP23016_ADDRESS);
-
 LEDStrip strip(6, 100); 
+
+// Define an array to hold MCP23016 addresses
+byte mcpAddresses[] = {0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26};
+
+MCP23016  mcpArray[7] = {
+  MCP23016(mcpAddresses[0]),
+  MCP23016(mcpAddresses[1]),
+  MCP23016(mcpAddresses[2]),
+  MCP23016(mcpAddresses[3]),
+  MCP23016(mcpAddresses[4]),
+  MCP23016(mcpAddresses[5]),
+  MCP23016(mcpAddresses[6])
+};
 
 void turn_LEDs_off(){
   for (size_t i = 0; i < 100; i++)
@@ -35,15 +42,31 @@ void setup() {
   Serial.println("=> Start <=");
   Serial.println("");
   Serial.begin(9600);
-  mcp.begin();
+ 
 
-  if (mcp.isConnected()) {
-    Serial.println("MCP23016 connected!");
-  } else {
-    Serial.println("MCP23016 not found. Check connections.");
+
+   // Initialize all MCP23016 devices
+  for (int i = 0; i < 4; i++) {
+    mcpArray[i].begin();
   }
 
+  for (int i = 0; i < 4; i++) {
+    
+    
+    if(mcpArray[i].begin()){
+      Serial.print("MCP23016 at address ");
+      Serial.print(mcpAddresses[i], HEX);
+      Serial.println(" is connected.");
+    }
+    else{
+      Serial.print("MCP23016 at address ");
+      Serial.print(mcpAddresses[i], HEX);
+      Serial.println(" is NOT connected.");
+    }
 
+  }
+
+  // Turn all the LEDs off
   turn_LEDs_off();
    
   
@@ -65,11 +88,27 @@ void loop() {
 
   //}Serial.println();
   delay(1000);
+
+  for (int i = 0; i < 4; i++) {
+    
+    
+    
+    if(mcpArray[i].begin()){
+      Serial.print(" ~*~ MCP23016 at address ");
+      Serial.print(mcpAddresses[i], HEX);
+      Serial.print(" And read's: ");
+      Serial.println(mcpArray[i].readGPIO(), BIN);
+    }
+    else{
+      Serial.print(" ~*~ MCP23016 at address ");
+      Serial.print(mcpAddresses[i],  HEX);
+      Serial.println(" is NOT connected.");
+    }
+
+  }
   
 
-  uint16_t inputValues = mcp.readInputs();
-  Serial.print("Input values: ");
-  Serial.println(inputValues, BIN);
+  
   // do other stuff here
 
 
