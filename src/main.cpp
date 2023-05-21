@@ -1,6 +1,8 @@
 #include "MCP23016.h"
 #include "MCP23016Manager.h" 
 #include "LEDController.h"
+#include <ButtonControl.h>
+#include <PotentiometerControl.h>
 
 // Define the I2C addresses of the MCP23016 chips
 #define MCP23016_ADDRESS_1 0x20
@@ -11,8 +13,32 @@
 // Create MCP23016Manager object
 MCP23016Manager mcpManager;
 
+LEDStrip strip(6, 100);
+
+const int BUTTON_PIN = 4;
+ButtonControl button(BUTTON_PIN);
+
+const int POT_PIN = A0;
+PotentiometerControl potentiometer(POT_PIN);
+
+void db_Potentiometer() {
+    int rawValue = potentiometer.getValue();
+    int mappedValue = potentiometer.getMappedValue();
+
+    Serial.print("Raw Value: ");
+    Serial.print(rawValue);
+    Serial.print(" | Mapped Value: ");
+    Serial.println(mappedValue);
+
+}
+
+
 void setup() {
     Serial.begin(9600);
+
+    button.begin(); // button
+
+    potentiometer.begin(); // Potentiometer
     
     // Setup the MCP23016 expanders
     if (!mcpManager.setupExpander(MCP23016_ADDRESS_1)) {
@@ -29,16 +55,26 @@ void setup() {
     }
 }
 
+
+
+
 void loop() {
+    if (button.isPressed()) {
+        Serial.println("Button pressed!");
+        // Perform desired actions when the button is pressed
+    }
+
     // Read all inputs
     mcpManager.readAllInputs();
 
     // Print the state of all inputs as a single string of ones and zeros
     String inputStates = "";
     for (int i = 0; i < 4 * 16; i++) {
+
         inputStates += mcpManager.getInputState(i) ? "1" : "0";
     }
     Serial.println("Input: " + inputStates);
+    db_Potentiometer();
 
     delay(1000);
 }
