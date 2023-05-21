@@ -1,35 +1,43 @@
-// MCP23016Manager.cpp
 #include "MCP23016Manager.h"
 
-MCP23016Manager::MCP23016Manager(MCP23016* mcpArray[], uint8_t size)
-    : _mcpArray(mcpArray), _size(size)
-{
-    _previousStates = new uint16_t[size];
-    for (uint8_t i = 0; i < size; i++) {
-        _previousStates[i] = _mcpArray[i]->readGPIO();
+MCP23016Manager::MCP23016Manager() : expanderCount(0) {
+    for (int i = 0; i < MAX_EXPANDERS * 16; i++) {
+        inputStates[i] = 0;
     }
 }
 
 MCP23016Manager::~MCP23016Manager() {
-    delete[] _previousStates;
+    for (int i = 0; i < expanderCount; i++) {
+        delete expanders[i];
+    }
 }
 
-
-uint8_t MCP23016Manager::getChangedPins(int changedPins[MAX_CHANGES]) {
-    uint8_t numChanges = 0;
-    for (uint8_t i = 0; i < _size; i++) {
-        uint16_t currentState = _mcpArray[i]->readGPIO();
-        uint16_t changes = currentState ^ _previousStates[i];
-        for (uint8_t j = 0; j < 16; j++) {
-            if (changes & (1 << j)) {
-                int pinNumber = i * 16 + j;
-                if (numChanges < MAX_CHANGES) {
-                    changedPins[numChanges] = pinNumber;
-                    numChanges++;
-                }
-            }
-        }
-        _previousStates[i] = currentState;
+bool MCP23016Manager::setupExpander(uint8_t address) {
+    if (expanderCount >= MAX_EXPANDERS) {
+        return false;
     }
-    return numChanges;
+    MCP23016* expander = new MCP23016(address);
+    if (!expander->begin()) {
+        delete expander;
+        return false;
+    }
+    expanders[expanderCount] = expander;
+    expanderCount++;
+    return true;
+}
+
+void MCP23016Manager::readAllInputs() {
+    for (int i = 0; i < expanderCount; i++) {
+        uint16_t gpio = expanders[i]->readGPIO();
+        for (int j = 0; j < 16; j++) {
+            inputStates[i * 16 + j] = (gpio >> j) & 1;
+        }
+    }
+}
+
+uint16_t MCP23016Manager::getInputState(uint8_t inputNumber) {
+    if (inputNumber < MAX_EXPANDERS * 16) {
+        return inputStates[inputNumber];
+    }
+    return 0;
 }

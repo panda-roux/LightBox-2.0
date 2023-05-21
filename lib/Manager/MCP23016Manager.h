@@ -1,22 +1,23 @@
-// MCP23016Manager.h
-#ifndef MCP23016MANAGER_H
-#define MCP23016MANAGER_H
+#ifndef MCP23016Manager_h
+#define MCP23016Manager_h
 
-#include <Arduino.h>
-#include <MCP23016.h>
+#include "Arduino.h"
+#include "MCP23016.h"
 
-#define MAX_CHANGES 16
+#define MAX_EXPANDERS 7
 
 class MCP23016Manager {
 public:
-    MCP23016Manager(MCP23016* mcpArray[], uint8_t size);
+    MCP23016Manager();
     ~MCP23016Manager();
-    uint8_t getChangedPins(int changedPins[MAX_CHANGES]); // New method
+    bool setupExpander(uint8_t address);
+    void readAllInputs();
+    uint16_t getInputState(uint8_t inputNumber);
 
 private:
-    MCP23016** _mcpArray;
-    uint8_t _size;
-    uint16_t* _previousStates;
+    MCP23016* expanders[MAX_EXPANDERS];
+    uint8_t expanderCount;
+    uint16_t inputStates[MAX_EXPANDERS * 16];
 };
 
 #endif
