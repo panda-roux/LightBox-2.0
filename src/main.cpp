@@ -1,116 +1,43 @@
-#include <Arduino.h>
-#include "LEDsrtip_class.cpp"
+#include "MCP23016.h"
+#include "MCP23016Manager.h" 
+#include "LEDController.h"
 
-#include <Wire.h>
-#include "C:\Users\battl\Documents\PlatformIO\Projects\LightBox 2.0\lib\Sensor_REV_B\MCP23016.h"
+// Define the I2C addresses of the MCP23016 chips
+#define MCP23016_ADDRESS_1 0x20
+#define MCP23016_ADDRESS_2 0x21
+#define MCP23016_ADDRESS_3 0x22
+#define MCP23016_ADDRESS_4 0x23
 
-// instantiate a LEDStrip object connected to pin 6 with 100 LED
-// instantiate 7 Controller objects 
-LEDStrip strip(6, 100); 
+// Create MCP23016 objects
+MCP23016 mcp1(MCP23016_ADDRESS_1);
+MCP23016 mcp2(MCP23016_ADDRESS_2);
+MCP23016 mcp3(MCP23016_ADDRESS_3);
+MCP23016 mcp4(MCP23016_ADDRESS_4);
 
-// Define an array to hold MCP23016 addresses
-byte mcpAddresses[] = {0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26};
+// Create an array of MCP23016 objects
+MCP23016* mcpArray[] = {&mcp1, &mcp2, &mcp3, &mcp4};
 
-MCP23016  mcpArray[7] = {
-  MCP23016(mcpAddresses[0]),
-  MCP23016(mcpAddresses[1]),
-  MCP23016(mcpAddresses[2]),
-  MCP23016(mcpAddresses[3]),
-  MCP23016(mcpAddresses[4]),
-  MCP23016(mcpAddresses[5]),
-  MCP23016(mcpAddresses[6])
-};
+// Create MCP23016Manager object
+MCP23016Manager mcpManager(mcpArray, sizeof(mcpArray) / sizeof(mcpArray[0]));
 
-void turn_LEDs_off(){
-  for (size_t i = 0; i < 100; i++)
-  {
-    /* Resset */
-    strip.setLEDColor(i,0,0,0); // set all leds off
+// Create your LED strip object here
+LEDStrip ledStrip(6, 100);
 
-  }
-  strip.run(); // update leds
-};
+// Create LEDController object
+LEDController ledController(ledStrip);
 
 void setup() {
-
-  // put your setup code here, to run once:
   Serial.begin(9600);
-  delay(100);
-  
-  
-  Serial.println("");
-  Serial.println("=> Start <=");
-  Serial.println("");
-  Serial.begin(9600);
- 
-
-
-   // Initialize all MCP23016 devices
-  for (int i = 0; i < 4; i++) {
-    mcpArray[i].begin();
-  }
-
-  for (int i = 0; i < 4; i++) {
-    
-    
-    if(mcpArray[i].begin()){
-      Serial.print("MCP23016 at address ");
-      Serial.print(mcpAddresses[i], HEX);
-      Serial.println(" is connected.");
-    }
-    else{
-      Serial.print("MCP23016 at address ");
-      Serial.print(mcpAddresses[i], HEX);
-      Serial.println(" is NOT connected.");
-    }
-
-  }
-
-  // Turn all the LEDs off
-  turn_LEDs_off();
-   
-  
+  // Setup your LED strip here
 }
-
-//Variables
-float dimerVavue = 0.7;
 
 void loop() {
-  // set LED colors debug
-  strip.setLEDColor(0, 255, 0, 0); // set the first LED to red
-  strip.setLEDColor(9, 255, 0, 0); // set the 10th LED to red
-  strip.setLEDColor(49, 0, 255, 0); // set the 50th LED to green
-  strip.setLEDColor(99, 0, 0, 255); // set the last LED to blue
+  int changedPins[MAX_CHANGES];
+  uint8_t numChanges = mcpManager.getChangedPins(changedPins);
+  ledController.updateLEDs(changedPins, numChanges);
+  ledController.printActivations(changedPins, numChanges);
+  delay(100);
 
-  // run the LED strip
-  strip.run();
-  
-
-  //}Serial.println();
+  Serial.println(numChanges);
   delay(1000);
-
-  for (int i = 0; i < 4; i++) {
-    
-    
-    
-    if(mcpArray[i].begin()){
-      Serial.print(" ~*~ MCP23016 at address ");
-      Serial.print(mcpAddresses[i], HEX);
-      Serial.print(" And read's: ");
-      Serial.println(mcpArray[i].readGPIO(), BIN);
-    }
-    else{
-      Serial.print(" ~*~ MCP23016 at address ");
-      Serial.print(mcpAddresses[i],  HEX);
-      Serial.println(" is NOT connected.");
-    }
-
-  }
-  
-
-  
-  // do other stuff here
-
-
 }
-
