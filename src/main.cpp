@@ -80,6 +80,8 @@ void loop() {
     // Read all inputs
     mcpManager.readAllInputs();
 
+    mcpManager.checkConnectivity();
+
     // Print the state of all inputs as a single string of ones and zeros
     String inputStates = "";
     for (int i = 0; i < 4 * 16; i++) {
