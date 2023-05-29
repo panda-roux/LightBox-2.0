@@ -41,3 +41,16 @@ uint16_t MCP23016Manager::getInputState(uint8_t inputNumber) {
     }
     return 0;
 }
+void MCP23016Manager::checkConnectivity() {
+  for (int i = 0; i < expanderCount; i++) {
+    if (expanders[i]->isConnected()) {
+      Serial.print("Expander at address ");
+      Serial.print(expanders[i]->getAddress(), HEX);
+      Serial.println(" is connected.");
+    } else {
+      Serial.print("Expander at address ");
+      Serial.print(expanders[i]->getAddress(), HEX);
+      Serial.println(" is not connected.");
+    }
+  }
+}

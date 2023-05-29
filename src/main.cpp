@@ -9,6 +9,10 @@
 #define MCP23016_ADDRESS_2 0x21
 #define MCP23016_ADDRESS_3 0x22
 #define MCP23016_ADDRESS_4 0x23
+#define MCP23016_ADDRESS_5 0x24
+#define MCP23016_ADDRESS_6 0x25
+#define MCP23016_ADDRESS_7 0x26
+
 
 // Create MCP23016Manager object
 MCP23016Manager mcpManager;
@@ -52,6 +56,15 @@ void setup() {
     }
     if (!mcpManager.setupExpander(MCP23016_ADDRESS_4)) {
         Serial.println("Failed to setup expander at address 4");
+    }
+    if (!mcpManager.setupExpander(MCP23016_ADDRESS_5)) {
+        Serial.println("Failed to setup expander at address 5");
+    }
+    if (!mcpManager.setupExpander(MCP23016_ADDRESS_6)) {
+        Serial.println("Failed to setup expander at address 6");
+    }
+    if (!mcpManager.setupExpander(MCP23016_ADDRESS_7)) {
+        Serial.println("Failed to setup expander at address 7");
     }
 }
 
