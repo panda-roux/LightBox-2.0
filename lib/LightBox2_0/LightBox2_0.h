@@ -11,6 +11,8 @@ class LightBox2_0 {
     void checkSerial();
     void present();
     void past();
+    void DEBUG_mode();
+    void db_Potentiometer();
   private:
     unsigned long _startTime;
 };
