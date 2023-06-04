@@ -3,7 +3,6 @@
 #include <MCP23016.h>
 #include <MCP23016Manager.h>
 #include <ButtonControl.h>
-#include <PotentiometerControl.h>
 #include <LEDStrip.h>
 #include <BuzzerSounds.h>
 
@@ -20,7 +19,7 @@
 static const int LED_STRIP_PIN = 6;
 static const int BUZZER_PIN = 3;
 static const int BUTTON_PIN = 4;
-static const int POT_PIN = A0;
+
 
 
 // Create MCP23016Manager object
@@ -32,8 +31,7 @@ LEDStrip strip(LED_STRIP_PIN, 100);
 // Create button object
 ButtonControl button(BUTTON_PIN);
 
-// creates potentiometer object
-PotentiometerControl potentiometer(POT_PIN);
+
 
 BuzzerSounds buzz(BUZZER_PIN);
 
@@ -48,7 +46,7 @@ void LightBox2_0::setup() {
 
   button.begin(); // button
 
-  potentiometer.begin(); // Potentiometer
+  
 
   
     
@@ -92,16 +90,6 @@ void LightBox2_0::present() {
   // Code for present function
 }
 
-void LightBox2_0::db_Potentiometer() {
-  int rawValue = potentiometer.getValue();
-    int mappedValue = potentiometer.getMappedValue();
-
-    Serial.print("Raw Value: ");
-    Serial.print(rawValue);
-    Serial.print(" | Mapped Value: ");
-    Serial.println(mappedValue);
-}
-
 void LightBox2_0::past() {
   // Code for past function
 }
@@ -123,5 +111,9 @@ void LightBox2_0::DEBUG_mode() {
    }
  }
  buzz.playMarioCoin();
+ strip.colorCycleWithGap(50);
+
  Serial.println("<= END =>");
+ delay(1000);
+ strip.turnOffAll();
 }

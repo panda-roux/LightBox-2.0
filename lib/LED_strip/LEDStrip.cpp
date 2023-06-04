@@ -1,9 +1,17 @@
 #include "LEDStrip.h"
+#include <PotentiometerControl.h>
+
+static const int POT_PIN = A0;
+
+// creates potentiometer object
+PotentiometerControl potentiometer(POT_PIN);
+
 
 LEDStrip::LEDStrip(uint8_t pin, uint8_t num) {
   pixels = Adafruit_NeoPixel(num, pin, NEO_GRB + NEO_KHZ800);
   numLEDs = num;
   pixels.begin();
+  potentiometer.begin();
 }
 
 void LEDStrip::setLEDColor(uint8_t led, uint8_t red, uint8_t green, uint8_t blue) {
@@ -38,6 +46,8 @@ void LEDStrip::setBrightness(uint8_t brightness) {
   pixels.show(); // update the LED strip
 }
 void LEDStrip::colorCycleWithGap(uint8_t gap) {
+  Serial.println("<= start =>");
+
   uint8_t red = 255, green = 0, blue = 0;
   uint8_t brightness = 100; // Start with full brightness
   for(uint8_t i = 0; i < numLEDs; i++) {
