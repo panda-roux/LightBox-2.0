@@ -74,6 +74,7 @@ void LEDStrip::colorCycleWithGap(uint8_t gap) {
     } else {
       pixels.setPixelColor(i, pixels.Color(0, 0, 0)); // Turn off the LED
     }
+    delay(10);
   }
   pixels.show(); // Update the LED strip
   // Decrease brightness for next cycle

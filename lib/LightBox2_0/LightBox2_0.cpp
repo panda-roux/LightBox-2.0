@@ -111,9 +111,20 @@ void LightBox2_0::DEBUG_mode() {
    }
  }
  buzz.playMarioCoin();
- strip.colorCycleWithGap(50);
+ strip.colorCycleWithGap(2);
 
  Serial.println("<= END =>");
- delay(1000);
+ if (button.isPressed())
+ {
+  /* code */
+  Serial.println("Button pressed!");
+ }
+ 
+ delay(2000);
+ if (button.isPressed())
+ {
+  /* code */
+  Serial.println("Button pressed!");
+ }
  strip.turnOffAll();
 }

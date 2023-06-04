@@ -22,7 +22,7 @@ void ButtonControl::begin() {
 }
 
 bool ButtonControl::isPressed() {
-  return digitalRead(_pin) == LOW;
+  return digitalRead(_pin) == HIGH;
 }
 
 #endif
