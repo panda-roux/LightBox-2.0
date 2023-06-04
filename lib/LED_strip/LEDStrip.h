@@ -12,6 +12,9 @@ class LEDStrip {
     LEDStrip(uint8_t pin, uint8_t num);
     void setLEDColor(uint8_t led, uint8_t red, uint8_t green, uint8_t blue);
     void run();
+    void turnOffAll();
+    void setBrightness(uint8_t brightness);
+    void colorCycleWithGap(uint8_t gap);
 };
 
 #endif

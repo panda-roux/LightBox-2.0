@@ -5,6 +5,7 @@
 #include <ButtonControl.h>
 #include <PotentiometerControl.h>
 #include <LEDStrip.h>
+#include <BuzzerSounds.h>
 
 
 // Define the I2C addresses of the MCP23016 chips
@@ -34,6 +35,8 @@ ButtonControl button(BUTTON_PIN);
 // creates potentiometer object
 PotentiometerControl potentiometer(POT_PIN);
 
+BuzzerSounds buzz(BUZZER_PIN);
+
 
 LightBox2_0::LightBox2_0() {
   _startTime = 0;
@@ -46,11 +49,17 @@ void LightBox2_0::setup() {
   button.begin(); // button
 
   potentiometer.begin(); // Potentiometer
+
+  
     
 
   // Check for connectivity
   if (Serial) {
+    // Tone
+    buzz.playR2D2();
+
     // If a serial connection is available, enter debug mode
+
     Serial.println("Entering debug mode...");
     // Add any additional debug setup code here
     DEBUG_mode();
@@ -98,54 +107,21 @@ void LightBox2_0::past() {
 }
 
 void LightBox2_0::DEBUG_mode() {
-  // Setup the MCP23016 expanders
-    if (!mcpManager.setupExpander(MCP23016_ADDRESS_1)) {
-        Serial.println("Failed to setup expander at address 0");
-    }else
-    {
-      /* code */
-      Serial.println("Expander at address 0 is connected");
-    }
-    if (!mcpManager.setupExpander(MCP23016_ADDRESS_2)) {
-        Serial.println("Failed to setup expander at address 1");
-    }else
-    {
-      /* code */
-      Serial.println("Expander at address 1 is connected");
-    }
-    if (!mcpManager.setupExpander(MCP23016_ADDRESS_3)) {
-        Serial.println("Failed to setup expander at address 2");
-    }else
-    {
-      /* code */
-      Serial.println("Expander at address 2 is connected");
-    }
-    if (!mcpManager.setupExpander(MCP23016_ADDRESS_4)) {
-        Serial.println("Failed to setup expander at address 3");
-    }else
-    {
-      /* code */
-      Serial.println("Expander at address 3 is connected");
-    }
-    if (!mcpManager.setupExpander(MCP23016_ADDRESS_5)) {
-        Serial.println("Failed to setup expander at address 4");
-    }else
-    {
-      /* code */
-      Serial.println("Expander at address 4 is connected");
-    }
-    if (!mcpManager.setupExpander(MCP23016_ADDRESS_6)) {
-        Serial.println("Failed to setup expander at address 5");
-    }else
-    {
-      /* code */
-      Serial.println("Expander at address 5 is connected");
-    }
-    if (!mcpManager.setupExpander(MCP23016_ADDRESS_7)) {
-        Serial.println("Failed to setup expander at address 6");
-    }else
-    {
-      /* code */
-      Serial.println("Expander at address 6 is connected");
-    }
+  // Turn all LEDs off
+  strip.turnOffAll();
+ // Setup the MCP23016 expanders
+ uint8_t addresses[] = {MCP23016_ADDRESS_1, MCP23016_ADDRESS_2, MCP23016_ADDRESS_3, MCP23016_ADDRESS_4, MCP23016_ADDRESS_5, MCP23016_ADDRESS_6, MCP23016_ADDRESS_7};
+ for (uint8_t i = 0; i < sizeof(addresses); i++) {
+   if (!mcpManager.setupExpander(addresses[i])) {
+     Serial.print("Failed to setup expander at address ");
+     Serial.println(i);
+   } else {
+     Serial.print("Expander at address ");
+     Serial.print(i);
+     Serial.println(" is connected");
+     buzz.lowFrequencyBeep();
+   }
+ }
+ buzz.playMarioCoin();
+ Serial.println("<= END =>");
 }
