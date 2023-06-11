@@ -5,11 +5,15 @@
 #include <ButtonControl.h>
 #include <LEDStrip.h>
 #include <BuzzerSounds.h>
+#include <PotentiometerControl.h>
+#include <LEDController.h>
 
 // <== Pin Setup ==>
 static const int LED_STRIP_PIN = 6; // LED pin DO to DI in led strip
 static const int BUZZER_PIN = 3; // Buzzer button activation
 static const int BUTTON_PIN = 4; // Button pin
+static const int PON_PIN = A0;
+
 
 
 // <== Objects ==>
@@ -26,6 +30,13 @@ ButtonControl button(BUTTON_PIN);
 
 // Create Sound object
 BuzzerSounds buzz(BUZZER_PIN);
+
+// Create Potentiometer object
+PotentiometerControl pont(PON_PIN);
+
+// Create LEDController object
+LEDController LEDC(strip,pont);
+
 
 
 LightBox2_0 program;    
