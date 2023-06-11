@@ -3,8 +3,12 @@
 
 #include "Arduino.h"
 
+
+
+
 class LightBox2_0 {
   public:
+    
     LightBox2_0();
     void setup();
     void loop();
@@ -16,10 +20,14 @@ class LightBox2_0 {
     void LigthBox_one();
     void tick();
     void tock();
+    
   private:
     unsigned long _startTime;
     unsigned long _tickIn;
     unsigned long _tockOut;
+    
+    
+
 };
 
 #endif

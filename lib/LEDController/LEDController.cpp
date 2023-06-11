@@ -1,8 +1,9 @@
 // LEDController.cpp
 #include "LEDController.h"
 
-LEDController::LEDController(LEDStrip& ledStrip)
-    : _ledStrip(ledStrip)
+LEDController::LEDController(LEDStrip& ledStrip,PotentiometerControl& Pod)
+    : _strip(ledStrip);
+    : _potentiometer(Pod);
 {}
 
 void LEDController::updateLEDs(int changedPins[MAX_CHANGES], uint8_t numChanges) {
