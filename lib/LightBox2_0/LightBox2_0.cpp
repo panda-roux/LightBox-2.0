@@ -5,6 +5,7 @@
 #include <ButtonControl.h>
 #include <LEDStrip.h>
 #include <BuzzerSounds.h>
+//#include <PotentiometerControl.h>
 
 
 // Define the I2C addresses of the MCP23016 chips
@@ -19,7 +20,8 @@
 static const int LED_STRIP_PIN = 6;
 static const int BUZZER_PIN = 3;
 static const int BUTTON_PIN = 4;
-
+const int POT_PIN = A0;
+#define ACTION_THRESHOLD 100
 
 
 // Create MCP23016Manager object
@@ -28,28 +30,27 @@ MCP23016Manager mcpManager;
 // Create the LED strip object
 LEDStrip strip(LED_STRIP_PIN, 100);
 
-// Create button object
+// Controls: Create button object
 ButtonControl button(BUTTON_PIN);
 
-
-
+// Create Sound object
 BuzzerSounds buzz(BUZZER_PIN);
 
+// Controls: Create Potentiometer object
+//PotentiometerControl potentiometer(POT_PIN);
 
 LightBox2_0::LightBox2_0() {
   _startTime = 0;
 }
 
 void LightBox2_0::setup() {
-  // Setup code here
-  Serial.begin(9600);
+  // <== Setup code here ==>
+  
+  Serial.begin(9600); // Serial
+
+  
 
   button.begin(); // button
-
-  
-
-  
-    
 
   // Check for connectivity
   if (Serial) {
@@ -60,7 +61,8 @@ void LightBox2_0::setup() {
 
     Serial.println("Entering debug mode...");
     // Add any additional debug setup code here
-    DEBUG_mode();
+    db_mode();
+
   } else {
     // If no serial connection is available, continue as normal
     // Add any additional normal setup code here
@@ -77,6 +79,9 @@ void LightBox2_0::loop() {
   }
   //Serial.print("Time elapsed: ");
   //Serial.println(currentTime - _startTime);
+  LigthBox_one();
+
+  // 
 }
 
 void LightBox2_0::checkSerial() {
@@ -84,6 +89,12 @@ void LightBox2_0::checkSerial() {
     // Handle available serial data
     // Add error handling here
   }
+}
+void LightBox2_0::tick() {
+  // Code for tick function
+}
+void LightBox2_0::tock() {
+  // Code for tock function
 }
 
 void LightBox2_0::present() {
@@ -94,7 +105,29 @@ void LightBox2_0::past() {
   // Code for past function
 }
 
-void LightBox2_0::DEBUG_mode() {
+void LightBox2_0::LigthBox_one() {
+  // Code for LigthBox 1.0 program function
+  // Read all inputs
+  mcpManager.readAllInputs();
+
+  // Check the first 100 inputs
+    for (int i = 0; i < ACTION_THRESHOLD; i++) {
+      if (mcpManager.getInputState(i) == HIGH) {
+        // Do something
+        Serial.print("1");
+      }else if (mcpManager.getInputState(i) == LOW)
+      {
+        Serial.print("0");
+      }
+      
+    }
+  
+  Serial.println("");
+  delay(100);
+
+}
+
+void LightBox2_0::db_mode() {
   // Turn all LEDs off
   strip.turnOffAll();
  // Setup the MCP23016 expanders
@@ -128,3 +161,4 @@ void LightBox2_0::DEBUG_mode() {
  }
  strip.turnOffAll();
 }
+

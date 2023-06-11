@@ -11,10 +11,15 @@ class LightBox2_0 {
     void checkSerial();
     void present();
     void past();
-    void DEBUG_mode();
+    void db_mode();
     void db_Potentiometer();
+    void LigthBox_one();
+    void tick();
+    void tock();
   private:
     unsigned long _startTime;
+    unsigned long _tickIn;
+    unsigned long _tockOut;
 };
 
 #endif
