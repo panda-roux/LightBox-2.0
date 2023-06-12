@@ -1,6 +1,7 @@
 // LEDController.cpp
 #include "LEDController.h"
 
+
 LEDController::LEDController(LEDStrip& ledStrip,PotentiometerControl& Pod)
     : _strip(ledStrip), _potentiometer(Pod)
 {}

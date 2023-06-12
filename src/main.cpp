@@ -45,6 +45,8 @@ void setup() {
     // Tone
     buzz.playR2D2();
     program.setup();
+    LEDC._potentiometer.begin();
+    LEDC._strip.turnOffAll();
     
 }
 
@@ -57,12 +59,17 @@ void loop() {
       if (mcpManager.getInputState(i) == HIGH) {
         // Do something
         Serial.print("1");
+        LEDC._strip.setBrightness(i,255,0,0,LEDC._potentiometer.getMappedValue());
       }else if (mcpManager.getInputState(i) == LOW)
       {
         Serial.print("0");
+        LEDC._strip.setBrightness(i,0,255,0,LEDC._potentiometer.getMappedValue());
+  
       }
       
     }
+    Serial.print(" ");
+
 
 
     Serial.println("");

@@ -15,9 +15,9 @@ public:
  void updateLEDs(int changedPins[MAX_CHANGES], uint8_t numChanges);
  void printActivations(int changedPins[MAX_CHANGES], uint8_t numChanges);
  void handlePotentiometer(int potentiometerValue); // New method for handling potentiometer
-private:
- static const int POT_PIN = A0;
  LEDStrip& _strip;
  PotentiometerControl& _potentiometer;
+private:
+ 
 };
 #endif

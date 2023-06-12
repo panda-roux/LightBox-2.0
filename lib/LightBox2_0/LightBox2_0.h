@@ -16,7 +16,7 @@ class LightBox2_0 {
     void present();
     void past();
     void db_mode();
-    void db_Potentiometer();
+    
     void LigthBox_one();
     void tick();
     void tock();
