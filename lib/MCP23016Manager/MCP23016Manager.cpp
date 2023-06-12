@@ -1,11 +1,16 @@
 #include "MCP23016Manager.h"
 
-MCP23016Manager::MCP23016Manager(uint8_t addresses[], uint8_t size) {
-    for (uint8_t i = 0; i < size; i++) {
-        setupExpander(addresses[i]);
+MCP23016Manager::MCP23016Manager() : expanderCount(0) {
+    for (int i = 0; i < MAX_EXPANDERS * 16; i++) {
+        inputStates[i] = 0;
     }
 }
 
+MCP23016Manager::~MCP23016Manager() {
+    for (int i = 0; i < expanderCount; i++) {
+        delete expanders[i];
+    }
+}
 
 bool MCP23016Manager::setupExpander(uint8_t address) {
     if (expanderCount >= MAX_EXPANDERS) {

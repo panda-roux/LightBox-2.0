@@ -7,7 +7,7 @@
 class MCP23016Manager {
 public:
  MCP23016Manager();
- MCP23016Manager(uint8_t addresses[], uint8_t size); // new constructor
+ ~MCP23016Manager();
  bool setupExpander(uint8_t address);
  void readAllInputs();
  uint16_t getInputState(uint8_t inputNumber);
