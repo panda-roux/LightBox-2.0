@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "LEDStrip.h"
 #include "LEDController.h"
+#include <PotentiometerControl.h>
 
 
 
