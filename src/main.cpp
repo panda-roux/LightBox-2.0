@@ -11,13 +11,18 @@
 // <== Pin Setup ==>
 static const int LED_STRIP_PIN = 6; // LED pin DO to DI in led strip
 static const int BUZZER_PIN = 3; // Buzzer button activation
-static const int BUTTON_PIN = 4; // Button pin
+static const int BUTTON_PIN = 2; // Button pin
 static const int PON_PIN = A0;
 
 
 
 // <== Objects ==>
 #define ACTION_THRESHOLD 100
+
+// Define the I2C addresses for your MCP23016 devices
+uint8_t addresses[7] = {0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26};
+
+
 
 // Create MCP23016Manager object
 MCP23016Manager mcpManager;
@@ -59,12 +64,14 @@ void loop() {
     for (int i = 0; i < ACTION_THRESHOLD; i++) {
       if (mcpManager.getInputState(i) == HIGH) {
         // Do something
-        Serial.print("1");
+        Serial.print(mcpManager.getInputState(i));
+        //Serial.print("1");
         
         //LEDC._strip.setBrightness(i,255,0,0,);
       }else if (mcpManager.getInputState(i) == LOW)
       {
-        Serial.print("0");
+        Serial.print(mcpManager.getInputState(i));
+        //Serial.print("0");
         //LEDC._strip.setBrightness(i,0,255,0,);
   
       }
