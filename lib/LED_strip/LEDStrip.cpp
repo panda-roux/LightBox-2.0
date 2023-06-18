@@ -34,13 +34,6 @@ void LEDStrip::setBrightness(uint8_t i, uint8_t red, uint8_t green, uint8_t blue
   green = (green * brightness) / 100;
   blue = (blue * brightness) / 100;
   pixels.setPixelColor(i, pixels.Color(red, green, blue)); // set the new color
-  Serial.print(red);// Debug line
-  Serial.print(" ");// Debug line 
-  Serial.print(green);// Debug line
-  Serial.print(" ");// Debug line
-  Serial.print(blue);// Debug line
-  Serial.print(" ");// Debug line 
-
   run(); // update the LED strip
 }
 

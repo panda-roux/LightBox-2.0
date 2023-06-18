@@ -6,6 +6,17 @@ LEDController::LEDController(LEDStrip& ledStrip,PotentiometerControl& Pod)
     : _strip(ledStrip), _potentiometer(Pod)
 {}
 
+void LEDController::red_high_reg(int i){
+  _strip.setBrightness(i, 255, 0, 0, _potentiometer.getMappedValue());
+
+}
+
+void LEDController::green_high_reg(int i){
+  _strip.setBrightness(i, 0, 255, 0, _potentiometer.getMappedValue());
+
+}
+
+
 void LEDController::updateLEDs(int changedPins[MAX_CHANGES], uint8_t numChanges) {
   for (uint8_t i = 0; i < numChanges; i++) {
     int ledNumber = changedPins[i]; // Map pin number to LED number

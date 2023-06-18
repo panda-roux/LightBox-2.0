@@ -25,7 +25,7 @@ uint8_t addresses[7] = {0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26};
 
 
 // Create MCP23016Manager object
-MCP23016Manager mcpManager;
+MCP23016Manager manager;
 
 // Create the LED strip object
 LEDStrip strip(LED_STRIP_PIN, ACTION_THRESHOLD);
@@ -52,27 +52,38 @@ void setup() {
     program.setup();
     LEDC._potentiometer.begin();
     LEDC._strip.turnOffAll();
-    
+
+    // Setup the MCP23016 devices
+  for (int i = 0; i < 7; i++) {
+    if (!manager.setupExpander(addresses[i])) {
+      Serial.print("Failed to setup expander at address ");
+      Serial.println(addresses[i], HEX);
+    }
+  }
+
+  // Check connectivity
+  manager.checkConnectivity();
+
 }
 
 void loop() {
     // Read all inputs
-    mcpManager.readAllInputs();
+    manager.readAllInputs();
     
 
     // Check the first 100 inputs
-    for (int i = 0; i < ACTION_THRESHOLD; i++) {
-      if (mcpManager.getInputState(i) == HIGH) {
+    for (int i = 0; i < MAX_EXPANDERS * 16; i++) {
+      if (manager.getInputState(i) == HIGH) {
         // Do something
-        Serial.print(mcpManager.getInputState(i));
+        Serial.print(manager.getInputState(i));
         //Serial.print("1");
         
-        //LEDC._strip.setBrightness(i,255,0,0,);
-      }else if (mcpManager.getInputState(i) == LOW)
+        LEDC.red_high_reg(i);
+      }else if (manager.getInputState(i) == LOW)
       {
-        Serial.print(mcpManager.getInputState(i));
+        Serial.print(manager.getInputState(i));
         //Serial.print("0");
-        //LEDC._strip.setBrightness(i,0,255,0,);
+        LEDC.green_high_reg(i);
   
       }
       
@@ -92,11 +103,12 @@ void loop() {
     }
     
     
-    Serial.print(" "); 
+    Serial.println(" "); 
+    manager.checkConnectivity();
 
-
-
-    Serial.println("");
+    
+  
+   
     delay(100);
     
 }

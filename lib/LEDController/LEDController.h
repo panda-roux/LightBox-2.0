@@ -14,7 +14,8 @@ public:
  LEDController(LEDStrip& ledStrip,PotentiometerControl& Pod);
  void updateLEDs(int changedPins[MAX_CHANGES], uint8_t numChanges);
  void printActivations(int changedPins[MAX_CHANGES], uint8_t numChanges);
- void handlePotentiometer(int potentiometerValue); // New method for handling potentiometer
+ void red_high_reg(int i);
+ void green_high_reg(int i);
  LEDStrip& _strip;
  PotentiometerControl& _potentiometer;
 private:
