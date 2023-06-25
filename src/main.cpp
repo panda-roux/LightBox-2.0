@@ -17,6 +17,7 @@ bool db_mode_flag = false;
 
 
 
+
 // <== Objects ==>
 #define ACTION_THRESHOLD 100
 
@@ -167,11 +168,18 @@ void run_lightbox_one(){ // TBC
         index ++;
         if (isHigh) {
           // Do something if the pin is HIGH
-          LEDC.red_high_reg(index);
+          if (index<=100)
+          {
+            LEDC.blinkUninterruptibleR(index, 0, 3000);
+            Serial.print(" ");
+            Serial.print(index);
+            Serial.print(" ");
+          }
+          
         
         } else {
           // Do something else if the pin is LOW
-          LEDC.led_off(index);
+          //LEDC.led_off(index);
           
         }
         index ++;
@@ -186,7 +194,7 @@ void run_lightbox_one(){ // TBC
 void setup() {
     // Pre-run steps
     LEDC._potentiometer.begin();
-    LEDC._strip.turnOffAll();
+    
 
     // Serial connection
     Serial.flush();
@@ -199,12 +207,17 @@ void setup() {
       /* Debug mode */
       db_mode_head();
     }
+    LEDC._strip.turnOffAll();
 
 }
 
 void loop() {
     // entry cloock
     timeMain.tick();
+    
+
+    LEDC.blinkUninterruptibleG(0, 2000, 500);
+    LEDC._strip.run();
     
     run_lightbox_one();    
 }

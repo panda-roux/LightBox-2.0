@@ -12,6 +12,7 @@ class Timer
     unsigned long getInterval();
     void tick();
     unsigned long tock();
+    void setInterval(unsigned long interval);
   private:
     unsigned long _interval;
     unsigned long _previousMillis;

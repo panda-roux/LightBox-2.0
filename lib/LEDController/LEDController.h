@@ -16,16 +16,21 @@ public:
     void green_high_reg(int i);
     void blick(uint8_t led, uint8_t colour);
     void blue_high_reg(int i);
-    void clockStart();
+    void clockTick();
+    void clockTock();
     void led_off (int i);
+    void blinkUninterruptibleR(int ledIndex, unsigned long intervalHigh, unsigned long intervalLow);
+    void blinkUninterruptibleG(int ledIndex, unsigned long intervalHigh, unsigned long intervalLow);
+    void blinkUninterruptibleB(int ledIndex, unsigned long intervalHigh, unsigned long intervalLow);
 
-    Timer timerLOW;
-    Timer timerHILH;
+    
+    
     LEDStrip& _strip;
     PotentiometerControl& _potentiometer;
     
 private:
-    
-    
+    Timer _timerHigh;
+    Timer _timerLow;
+    bool _isHigh;
 };
 #endif

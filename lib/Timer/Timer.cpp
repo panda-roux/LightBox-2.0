@@ -32,6 +32,11 @@ void Timer::tick(){
 
 }
 
+void Timer::setInterval(unsigned long interval) {
+  _interval = interval;
+}
+
+
 unsigned long Timer::tock(){
   _now = millis();
   _cycleTime = _now - _tickValue;
