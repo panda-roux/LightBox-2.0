@@ -1,5 +1,4 @@
 #include "Arduino.h"
-#include <LightBox2_0.h>
 #include <MCP23016.h>
 #include <MCP23016Manager.h>
 #include <ButtonControl.h>
@@ -60,7 +59,7 @@ void db_mode_head(){
   
   // Change debug flag
   db_mode_flag = true;
-  Serial.println("Entering debug mode.");
+  Serial.print("Entering debug mode.");
   for (size_t i = 0; i < 5; i++)
   {
     Serial.print(".");
@@ -69,7 +68,12 @@ void db_mode_head(){
   Serial.println(" ");
 
   // Tone
-  buzz.playR2D2();
+  if (db_mode_flag)
+  {
+    buzz.playR2D2();
+  }
+  
+  
       
   // Extenders first check
   for (int i = 0; i < 7; i++) {
@@ -86,9 +90,15 @@ void db_mode_head(){
   Serial.println("B = button: 1 is pressed, 0 is not pressed");
   Serial.println("Pm = Potentiometer mapped value from 0 to 100");
   Serial.println("Ct = Cycle time in milliseconds");
+  delay(500);
   Serial.print("Starting.");
-  for (size_t i = 0; i < 5; i++)
+  for (size_t i = 0; i < 2; i++)
   {
+    if (db_mode_flag)
+    {
+      buzz.playMarioCoin();
+    }
+    
     Serial.print(".");
     delay(500);
   }

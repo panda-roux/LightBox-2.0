@@ -8,10 +8,10 @@ BuzzerSounds::BuzzerSounds(int pin)
 }
 
 void BuzzerSounds::lowFrequencySiren() {
-  for (int i = 20; i < 50; i++) {
-    tone(_pin, i, 50);
+  for (int i = 70; i < 100; i++) {
+    tone(_pin, i, 90);
   }
-  for (int i = 50; i > 20; i--) {
+  for (int i = 100; i > 70; i--) {
     tone(_pin, i, 50);
   }
   noTone(_pin);
