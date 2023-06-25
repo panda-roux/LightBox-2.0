@@ -7,6 +7,7 @@
 #include <BuzzerSounds.h>
 #include <PotentiometerControl.h>
 #include <LEDController.h>
+#include <Timer.h>
 
 // <== Pin Setup ==>
 static const int LED_STRIP_PIN = 6; // LED pin DO to DI in led strip
@@ -42,14 +43,34 @@ PotentiometerControl pont(PON_PIN);
 // Create LEDController object
 LEDController LEDC(strip,pont);
 
+// Set timers
+Timer timer_down_blink(100);
+Timer timer_up_blink(300);
+//Timer timer_gap_blink(1000);
 
+   
+void blink(){
+  if (timer_down_blink.check())
+  {
+    if (timer_up_blink.check())
+    {
+      LEDC.led_off(1);
+      LEDC.led_off(100);
+      timer_down_blink.reset();
+    }else
+    {
+      LEDC.green_high_reg(1);
+      LEDC.blue_high_reg(100);
+    }
+  }
+  
+}
 
-LightBox2_0 program;    
 
 void setup() {
     // Tone
     buzz.playR2D2();
-    program.setup();
+    
     LEDC._potentiometer.begin();
     LEDC._strip.turnOffAll();
 
@@ -69,46 +90,25 @@ void setup() {
 void loop() {
     // Read all inputs
     manager.readAllInputs();
-    
 
     // Check the first 100 inputs
-    for (int i = 0; i < MAX_EXPANDERS * 16; i++) {
-      if (manager.getInputState(i) == HIGH) {
-        // Do something
-        Serial.print(manager.getInputState(i));
-        //Serial.print("1");
-        
-        LEDC.red_high_reg(i);
-      }else if (manager.getInputState(i) == LOW)
-      {
-        Serial.print(manager.getInputState(i));
-        //Serial.print("0");
-        LEDC.green_high_reg(i);
-  
+    int index = 0;
+    for (int i = 0; i < 7; i++) {
+      uint16_t gpio = manager.readExpander(i);
+      for (int pin = 0; pin < 16; pin++) {
+        bool isHigh = (gpio >> pin) & 1;
+        index ++;
+        if (isHigh) {
+          // Do something if the pin is HIGH
+          Serial.print("1");
+        } else {
+          // Do something else if the pin is LOW
+          Serial.print("0");
+        }
       }
-      
     }
-    Serial.print(" ");
-    Serial.print(LEDC._potentiometer.getMappedValue());
-    Serial.print(" ");
-    Serial.print(LEDC._potentiometer.getValue());
-    Serial.print(" ");
-    Serial.print("B ");
-    if (button.isPressed())
-    {
-      Serial.print("1");
-    }else
-    {
-      Serial.print("0");
-    }
-    
-    
-    Serial.println(" "); 
-    manager.checkConnectivity();
-
-    
-  
-   
-    delay(100);
+    index = 0;
+    manager.readAllInputs();    
+    Serial.println(" ");
     
 }

@@ -1,6 +1,7 @@
 // LEDController.cpp
 #include "LEDController.h"
 #include <PotentiometerControl.h>
+#include <Timer.h>
 
 LEDController::LEDController(LEDStrip& ledStrip,PotentiometerControl& Pod)
     : _strip(ledStrip), _potentiometer(Pod)
@@ -13,6 +14,16 @@ void LEDController::red_high_reg(int i){
 
 void LEDController::green_high_reg(int i){
   _strip.setBrightness(i, 0, 255, 0, _potentiometer.getMappedValue());
+
+}
+
+void LEDController::blue_high_reg(int i){
+  _strip.setBrightness(i, 0, 0, 255, _potentiometer.getMappedValue());
+
+}
+
+void LEDController::led_off (int i){
+  _strip.setLEDColor(i, 0, 0, 0);
 
 }
 
@@ -29,14 +40,3 @@ void LEDController::updateLEDs(int changedPins[MAX_CHANGES], uint8_t numChanges)
   }
 }
 
-// Update the LED color based on the pin state
-        // Here, you would add your logic for setting the LED colors
-        // For example: _ledStrip.setLEDColor(ledNumber, RED, GREEN, BLUE);
-
-void LEDController::printActivations(int changedPins[MAX_CHANGES], uint8_t numChanges) {
-    for (uint8_t i = 0; i < numChanges; i++) {
-        Serial.print("Pin ");
-        Serial.print(changedPins[i]);
-        Serial.println(" activated");
-    }
-}

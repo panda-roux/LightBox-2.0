@@ -19,6 +19,8 @@ public:
   MCP23016* expanders[MAX_EXPANDERS];
   uint8_t expanderCount;
   uint16_t inputStates[MAX_EXPANDERS * 16];
+  uint16_t readExpander(int expanderIndex);
+
 private:
   
 };

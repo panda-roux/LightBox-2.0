@@ -26,6 +26,7 @@ bool MCP23016Manager::setupExpander(uint8_t address) {
   return true;
 }
 
+
 void MCP23016Manager::readAllInputs() {
   for (int i = 0; i < expanderCount; i++) {
     uint16_t gpio = expanders[i]->readGPIO();
@@ -54,4 +55,12 @@ void MCP23016Manager::checkConnectivity() {
       Serial.println(" is not connected.");
     }
   }
+
+}
+
+uint16_t MCP23016Manager::readExpander(int expanderIndex) {
+  if (expanders[expanderIndex]->isConnected()) {
+    return expanders[expanderIndex]->readGPIO();
+  }
+  return 0; // Return 0 if the expander is not connected
 }

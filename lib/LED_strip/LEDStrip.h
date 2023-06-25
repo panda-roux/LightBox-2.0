@@ -1,6 +1,7 @@
 #ifndef LEDStrip_h
 #define LEDStrip_h
 #include <Adafruit_NeoPixel.h>
+#include <Timer.h>
 
 
 class LEDStrip {
