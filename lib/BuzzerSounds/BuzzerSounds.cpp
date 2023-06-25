@@ -7,6 +7,16 @@ BuzzerSounds::BuzzerSounds(int pin)
   _pin = pin;
 }
 
+void BuzzerSounds::lowFrequencySiren() {
+  for (int i = 20; i < 50; i++) {
+    tone(_pin, i, 50);
+  }
+  for (int i = 50; i > 20; i--) {
+    tone(_pin, i, 50);
+  }
+  noTone(_pin);
+}
+
 void BuzzerSounds::lowFrequencyBeep()
 {
   tone(_pin, 20, 100); // Send a 20 Hz sound signal to the buzzer for 100ms

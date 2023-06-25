@@ -10,6 +10,7 @@ class BuzzerSounds
     void lowFrequencyBeep();
     void playMarioCoin();
     void playR2D2();
+    void lowFrequencySiren();
   private:
     int _pin;
 };

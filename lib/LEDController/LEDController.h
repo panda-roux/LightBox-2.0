@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <LEDStrip.h> // LED class
 #include <PotentiometerControl.h>
-#include <Timer.h>
+
 
 
 

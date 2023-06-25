@@ -6,13 +6,18 @@
 class Timer
 {
   public:
-    Timer(unsigned long interval);
+    Timer();
     void reset();
     bool check();
     unsigned long getInterval();
+    void tick();
+    unsigned long tock();
   private:
     unsigned long _interval;
     unsigned long _previousMillis;
+    unsigned long _now;
+    unsigned long _cycleTime;
+    unsigned long _tickValue;
 };
 
 #endif

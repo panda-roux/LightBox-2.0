@@ -1,9 +1,9 @@
 #include "Arduino.h"
 #include "Timer.h"
 
-Timer::Timer(unsigned long interval)
+Timer::Timer()
 {
-  _interval = interval;
+  tock();
 }
 
 void Timer::reset()
@@ -25,4 +25,17 @@ bool Timer::check()
 unsigned long Timer::getInterval()
 {
   return _interval;
+}
+
+void Timer::tick(){
+  _tickValue = millis();
+
+}
+
+unsigned long Timer::tock(){
+  _now = millis();
+  _cycleTime = _now - _tickValue;
+
+  return _cycleTime;
+
 }
