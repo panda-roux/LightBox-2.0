@@ -73,9 +73,7 @@ void db_mode_head(){
   {
     buzz.playR2D2();
   }
-  
-  
-      
+   
   // Extenders first check
   for (int i = 0; i < 7; i++) {
     if (!manager.setupExpander(addresses[i])) {
@@ -104,34 +102,64 @@ void db_mode_head(){
     delay(500);
   }
   Serial.println("");
+
   // Data Hedder
   data_header();  
   
   //<= Exit HEAD =>
 }
 
-void db_mode(){
-  //<== MAIN ==>
+void setup() {
+    // Pre-run steps
+    LEDC._potentiometer.begin();
+    // Serial connection
+    Serial.flush();
+    Serial.begin(9800);
+    if (!Serial)
+    {
+      buzz.lowFrequencySiren();
+    }else
+    {
+      /* Debug mode */
+      db_mode_head();
+    }
+    LEDC._strip.turnOffAll();
 
-  
+}
 
-  // Extenders READ
+void loop() {
+    // entry cloock
+  timeMain.tick();
+    
+  // Check the first 100 inputs
   int index = 0;
+
+    /* Action with a ctivation. TBC */
   for (int i = 0; i < 7; i++) {
     uint16_t gpio = manager.readExpander(i);
     for (int pin = 0; pin < 16; pin++) {
-      bool isHigh = (gpio >> pin) & 1;
+      bool isHigh = (gpio >> pin);
+      index ++;
       if (isHigh) {
-        // Pin is HIGH
+        // Do something if the pin is HIGH
         Serial.print("1");
-        LEDC.red_high_reg(index);
+        if (index<=100)
+        {
+          LEDC.blinkUninterruptibleR(index, 0, 3000);
+          Serial.print(" ");
+          Serial.print(index);
+          Serial.print(" ");
+        }
+
       } else {
-        // Pin is LOW
-        Serial.print("0");
+      // Do something else if the pin is LOW
+      //LEDC.led_off(index);
+      Serial.print("0");
       }
       index ++;
+      
     }
-  }
+  } 
 
   // Button check
   if (button.isPressed())
@@ -152,74 +180,10 @@ void db_mode(){
 
   // New line
   Serial.println(" ");
-}
 
-void run_lightbox_one(){ // TBC
-  // Check the first 100 inputs
-  int index = 0;
-
-  if (!db_mode_flag)
-  {
-    /* Action with a ctivation. TBC */
-    for (int i = 0; i < 7; i++) {
-      uint16_t gpio = manager.readExpander(i);
-      for (int pin = 0; pin < 16; pin++) {
-        bool isHigh = (gpio >> pin) & 1;
-        index ++;
-        if (isHigh) {
-          // Do something if the pin is HIGH
-          if (index<=100)
-          {
-            LEDC.blinkUninterruptibleR(index, 0, 3000);
-            Serial.print(" ");
-            Serial.print(index);
-            Serial.print(" ");
-          }
-          
-        
-        } else {
-          // Do something else if the pin is LOW
-          //LEDC.led_off(index);
-          
-        }
-        index ++;
-      }
-    }
-  }else{
-    // Run Debug mode
-    db_mode();
-  }
-}
-
-void setup() {
-    // Pre-run steps
-    LEDC._potentiometer.begin();
-    
-
-    // Serial connection
-    Serial.flush();
-    Serial.begin(9800);
-    if (!Serial)
-    {
-      buzz.lowFrequencySiren();
-    }else
-    {
-      /* Debug mode */
-      db_mode_head();
-    }
-    LEDC._strip.turnOffAll();
-
-}
-
-void loop() {
-    // entry cloock
-    timeMain.tick();
-    
-
-    LEDC.blinkUninterruptibleG(0, 2000, 500);
-    LEDC._strip.run();
-    
-    run_lightbox_one();    
+  LEDC.blinkUninterruptibleG(0, 2000, 500);
+  LEDC._strip.run();
+  
 }
 
 
